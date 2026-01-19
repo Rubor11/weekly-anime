@@ -3,3 +3,4 @@ services:
     build: .
     ports:
       - 4001:4001
+    restart: unless-stopped
