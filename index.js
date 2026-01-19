@@ -176,6 +176,24 @@ function groupByWeekday(animes) {
   return days;
 }
 
+function flattenForHomepage(grouped) {
+  const result = [];
+
+  for (const [day, animes] of Object.entries(grouped)) {
+    for (const anime of animes) {
+      result.push({
+        day,
+        title: anime.title,
+        episode: anime.nextEpisode,
+        time: anime.nextRelease,
+        recommended: anime.recommended,
+        poster: anime.poster
+      });
+    }
+  }
+
+  return result;
+}
 
 
 // ----------------------
@@ -206,6 +224,34 @@ app.get("/weekly-anime", async (req, res) => {
     res.status(500).json({ error: "Error obteniendo calendario semanal" });
   }
 });
+
+app.get("/homepage/weekly", async (req, res) => {
+  try {
+    const libraryLists = await getUserLibrary(USER_ID);
+    const weekly = await getCurrentAnimeAniList();
+
+    const { inLibrary, topNotInLibrary } = splitWeeklyAnimes(
+      weekly,
+      libraryLists,
+      80
+    );
+
+    const combined = [
+      ...inLibrary.map(a => ({ ...a, recommended: false })),
+      ...topNotInLibrary.map(a => ({ ...a, recommended: true }))
+    ];
+
+    const grouped = groupByWeekday(combined);
+    const flat = flattenForHomepage(grouped);
+
+    res.json(flat);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error generando datos para Homepage" });
+  }
+});
+
+
 
 
 app.listen(PORT, () => {
