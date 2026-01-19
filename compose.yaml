@@ -1,0 +1,5 @@
+services:
+  weekly-anime:
+    build: .
+    ports:
+      - 4001:4001
