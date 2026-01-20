@@ -195,6 +195,13 @@ function flattenForHomepage(grouped) {
   return result;
 }
 
+function filterFlatByDay(flatData, day) {
+  return flatData.filter(
+    item => item.day.toLowerCase() === day.toLowerCase()
+  );
+}
+
+
 
 // ----------------------
 // Endpoint
@@ -250,6 +257,37 @@ app.get("/homepage/weekly", async (req, res) => {
     res.status(500).json({ error: "Error generando datos para Homepage" });
   }
 });
+
+app.get("/homepage/day/:day", async (req, res) => {
+  try {
+    const day = req.params.day;
+
+    const libraryLists = await getUserLibrary(USER_ID);
+    const weekly = await getCurrentAnimeAniList();
+
+    const { inLibrary, topNotInLibrary } = splitWeeklyAnimes(
+      weekly,
+      libraryLists,
+      80
+    );
+
+    const combined = [
+      ...inLibrary.map(a => ({ ...a, recommended: false })),
+      ...topNotInLibrary.map(a => ({ ...a, recommended: true }))
+    ];
+
+    const grouped = groupByWeekday(combined);
+    const flat = flattenForHomepage(grouped);
+
+    const filtered = filterFlatByDay(flat, day);
+
+    res.json(filtered);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error generando datos por día" });
+  }
+});
+
 
 
 
