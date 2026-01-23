@@ -170,7 +170,8 @@ function groupByWeekday(animes) {
     });
 
     // Limitar a 3 animes por día
-    days[day] = days[day].slice(0, 3);
+    // days[day] = days[day].slice(0, 3);
+    days[day] = days[day].slice(0, 1);
   });
 
   return days;
