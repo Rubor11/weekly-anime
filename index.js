@@ -178,22 +178,22 @@ function groupByWeekday(animes) {
 }
 
 function flattenForHomepage(grouped) {
-  // const result = [];
+  const result = [];
 
-  // for (const [day, animes] of Object.entries(grouped)) {
-  //   for (const anime of animes) {
-  //     result.push({
-  //       day,
-  //       title: anime.title,
-  //       episode: anime.nextEpisode,
-  //       time: anime.nextRelease,
-  //       recommended: anime.recommended,
-  //       poster: anime.poster
-  //     });
-  //   }
-  // }
+  for (const [day, animes] of Object.entries(grouped)) {
+    for (const anime of animes) {
+      result.push({
+        day,
+        title: anime.title,
+        episode: anime.nextEpisode,
+        time: anime.nextRelease,
+        recommended: anime.recommended,
+        poster: anime.poster
+      });
+    }
+  }
 
-  return grouped;
+  return result;
 }
 
 function filterFlatByDay(flatData, day) {
