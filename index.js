@@ -9,6 +9,65 @@ const PORT = 4001;
 const USER_ID = "7671831";
 
 // ----------------------
+// Cache del último capítulo
+// ----------------------
+let onePieceCache = {
+  chapter: null,
+  title: null,
+  publishAt: null,
+  lastUpdate: null,
+};
+
+// ----------------------
+// Scraper / MangaDex API
+// ----------------------
+async function updateOnePiece() {
+  try {
+    const mangaId = "a1c7c817-4e59-43b7-9365-09675a149a6f";
+    const languages = ["es", "en", "any"]; // orden de prioridad
+
+    let chapter = null;
+
+    for (const lang of languages) {
+      let url;
+      if (lang === "any") {
+        url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc`;
+      } else {
+        url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc&translatedLanguage[]=${lang}`;
+      }
+
+      const res = await fetch(url);
+      const json = await res.json();
+
+      if (json.data && json.data.length > 0) {
+        chapter = json.data[0];
+        break;
+      }
+    }
+
+    if (!chapter) return; // no hay capítulo disponible
+
+    onePieceCache = {
+      chapter: chapter.attributes.chapter,
+      title: chapter.attributes.title || null,
+      publishAt: chapter.attributes.publishAt,
+      externalUrl: chapter.attributes.externalUrl || null,
+      lastUpdate: new Date().toISOString(),
+    };
+
+    console.log("One Piece actualizado:", onePieceCache);
+  } catch (err) {
+    console.error("Error actualizando One Piece:", err);
+  }
+}
+
+
+// Ejecutar al iniciar y luego cada hora
+updateOnePiece();
+setInterval(updateOnePiece, 60 * 60 * 1000);
+
+
+// ----------------------
 // Helpers
 // ----------------------
 
@@ -287,6 +346,13 @@ app.get("/homepage/day/:day", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Error generando datos por día" });
   }
+});
+
+app.get("/homepage/one-piece", async (req, res) => {
+  if (!onePieceCache.chapter) {
+    await updateOnePiece();
+  }
+  res.json(onePieceCache);
 });
 
 
