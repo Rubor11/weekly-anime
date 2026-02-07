@@ -103,19 +103,19 @@ async function getUserLibrary(userId) {
     }
   `
   try {
-    const res = await 
-      fetch(`https://graphql.anilist.co`, 
-      {
-        method: "POST",
-        headers:  {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({
-          query,
-          variables: { userId }
-        })
-      });
+    const res = await
+      fetch(`https://graphql.anilist.co`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: JSON.stringify({
+            query,
+            variables: { userId }
+          })
+        });
 
     const json = await res.json();
 
@@ -352,7 +352,7 @@ app.get("/homepage/one-piece", async (req, res) => {
   if (!onePieceCache.chapter) {
     await updateOnePiece();
   }
-  res.json(onePieceCache);
+  res.json([onePieceCache]);
 });
 
 
