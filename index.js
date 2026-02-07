@@ -352,7 +352,7 @@ app.get("/homepage/one-piece", async (req, res) => {
   if (!onePieceCache.chapter) {
     await updateOnePiece();
   }
-  res.json([onePieceCache]);
+  res.json(onePieceCache);
 });
 
 
