@@ -47,10 +47,13 @@ async function updateOnePiece() {
 
     if (!chapter) return; // no hay capítulo disponible
 
+    const chapterNumber = chapter.attributes.chapter; // Guardamos el número
+
     onePieceCache = {
-      chapter: chapter.attributes.chapter,
+      chapter: chapterNumber,
       title: chapter.attributes.title || null,
       publishAt: chapter.attributes.publishAt,
+      readerUrl: `https://one-piece-fans2.com/manga/es/todos/${chapterNumber}`,
       externalUrl: chapter.attributes.externalUrl || null,
       lastUpdate: new Date().toISOString(),
     };
