@@ -10,4 +10,4 @@ COPY src ./src
 
 EXPOSE 4001
 
-CMD ["node", "src/index.js"]
+CMD ["node", "src/server.js"]
