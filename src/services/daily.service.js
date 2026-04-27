@@ -29,24 +29,22 @@ export function getTodayTop5(combined) {
 }
 
 export function formatHomepage(animes) {
-  return animes
-    .sort((a, b) =>
-      a.nextAiringEpisode.airingAt - b.nextAiringEpisode.airingAt
-    )
-    .map(anime => {
+  return {
+    data: animes.map(anime => {
       const date = new Date(anime.nextAiringEpisode.airingAt * 1000);
 
       return {
-        title: anime.title?.english || anime.title?.romaji,
-        subtitle: `Ep ${anime.nextAiringEpisode.episode}`,
-        value: date.toLocaleString("es-ES", {
-          weekday: "short",
-          day: "2-digit",
-          month: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit"
-        }),
-        image: anime.coverImage?.medium || null
+        id: anime.title?.english || anime.title?.romaji,
+        ip_address:
+          `Ep ${anime.nextAiringEpisode.episode} · ` +
+          date.toLocaleString("es-ES", {
+            weekday: "short",
+            day: "2-digit",
+            month: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          })
       };
-    });
+    })
+  };
 }
