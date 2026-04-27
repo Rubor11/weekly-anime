@@ -21,53 +21,53 @@ let onePieceCache = {
 // ----------------------
 // Scraper / MangaDex API
 // ----------------------
-async function updateOnePiece() {
-  try {
-    const mangaId = "a1c7c817-4e59-43b7-9365-09675a149a6f";
-    const languages = ["es", "en", "any"]; // orden de prioridad
+// async function updateOnePiece() {
+//   try {
+//     const mangaId = "a1c7c817-4e59-43b7-9365-09675a149a6f";
+//     const languages = ["es", "en", "any"]; // orden de prioridad
 
-    let chapter = null;
+//     let chapter = null;
 
-    for (const lang of languages) {
-      let url;
-      if (lang === "any") {
-        url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc`;
-      } else {
-        url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc&translatedLanguage[]=${lang}`;
-      }
+//     for (const lang of languages) {
+//       let url;
+//       if (lang === "any") {
+//         url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc`;
+//       } else {
+//         url = `https://api.mangadex.org/manga/${mangaId}/feed?limit=1&order[chapter]=desc&translatedLanguage[]=${lang}`;
+//       }
 
-      const res = await fetch(url);
-      const json = await res.json();
+//       const res = await fetch(url);
+//       const json = await res.json();
 
-      if (json.data && json.data.length > 0) {
-        chapter = json.data[0];
-        break;
-      }
-    }
+//       if (json.data && json.data.length > 0) {
+//         chapter = json.data[0];
+//         break;
+//       }
+//     }
 
-    if (!chapter) return; // no hay capítulo disponible
+//     if (!chapter) return; // no hay capítulo disponible
 
-    const chapterNumber = chapter.attributes.chapter; // Guardamos el número
+//     const chapterNumber = chapter.attributes.chapter; // Guardamos el número
 
-    onePieceCache = {
-      chapter: chapterNumber,
-      title: chapter.attributes.title || null,
-      publishAt: chapter.attributes.publishAt,
-      readerUrl: `https://one-piece-fans2.com/manga/es/todos/${chapterNumber}`,
-      externalUrl: chapter.attributes.externalUrl || null,
-      lastUpdate: new Date().toISOString(),
-    };
+//     onePieceCache = {
+//       chapter: chapterNumber,
+//       title: chapter.attributes.title || null,
+//       publishAt: chapter.attributes.publishAt,
+//       readerUrl: `https://one-piece-fans2.com/manga/es/todos/${chapterNumber}`,
+//       externalUrl: chapter.attributes.externalUrl || null,
+//       lastUpdate: new Date().toISOString(),
+//     };
 
-    console.log("One Piece actualizado:", onePieceCache);
-  } catch (err) {
-    console.error("Error actualizando One Piece:", err);
-  }
-}
+//     console.log("One Piece actualizado:", onePieceCache);
+//   } catch (err) {
+//     console.error("Error actualizando One Piece:", err);
+//   }
+// }
 
 
-// Ejecutar al iniciar y luego cada hora
-updateOnePiece();
-setInterval(updateOnePiece, 60 * 60 * 1000);
+// // Ejecutar al iniciar y luego cada hora
+// updateOnePiece();
+// setInterval(updateOnePiece, 60 * 60 * 1000);
 
 
 // ----------------------
