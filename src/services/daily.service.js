@@ -34,8 +34,8 @@ export function formatHomepage(animes) {
       const date = new Date(anime.nextAiringEpisode.airingAt * 1000);
 
       return {
-        id: anime.title?.english || anime.title?.romaji,
-        ip_address:
+        name: anime.title?.english || anime.title?.romaji,
+        info:
           `Ep ${anime.nextAiringEpisode.episode} · ` +
           date.toLocaleString("es-ES", {
             weekday: "short",
